@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Delivery - Suribabu Kodi Pulao</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      background: #f3f4f6;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #22c55e;
+      border-radius: 6px;
+    }
+    body {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    #special-dishes-list {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    #special-dishes-list > div {
+      flex: 0 0 auto;
+      width: 260px;
+      min-width: 220px;
+      background: #fff;
+      transition: box-shadow 0.3s, transform 0.3s, border-color 0.3s, background-color 0.3s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      z-index: 1;
+      position: relative;
+      scroll-snap-align: center;
+      border: 2px solid transparent;
+    }
+    #special-dishes-list > div:hover {
+      z-index: 10;
+      box-shadow: 0 8px 32px rgba(34,197,94,0.18), 0 2px 8px rgba(0,0,0,0.10);
+      transform: scale(1.05);
+    }
+    #special-dishes-list > div.selected {
+      border-color: #22c55e;
+      background-color: #f0fdf4;
+      box-shadow: 0 0 15px rgba(34,197,94,0.5);
+      transform: scale(1.02);
+    }
+    @media (min-width: 640px) {
+      .container {
+        max-width: 640px;
+      }
+      #special-dishes-list {
+        flex-wrap: wrap;
+        justify-content: center;
+        overflow-x: hidden;
+      }
+      #special-dishes-list > div {
+        width: calc(50% - 0.5rem);
+      }
+    }
+    @media (min-width: 768px) {
+      .container {
+        max-width: 768px;
+      }
+      #special-dishes-list > div {
+        width: calc(33.33% - 0.67rem);
+      }
+      #special-dishes-list > div:hover {
+        transform: scale(1.05);
+      }
+    }
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 1024px;
+      }
+      #special-dishes-list > div {
+        width: calc(25% - 0.75rem);
+      }
+    }
+    @media (min-width: 1280px) {
+      .container {
+        max-width: 1280px;
+      }
+    }
+    @media (max-width: 639px) {
+      h2 {
+        font-size: 1.5rem;
+      }
+      h3 {
+        font-size: 1.125rem;
+      }
+      p, button, input, textarea {
+        font-size: 0.875rem;
+      }
+      .rounded-2xl, .rounded-3xl, .rounded-xl {
+        border-radius: 0.75rem;
+      }
+      .px-4, .px-6, .px-8 {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+      }
+      .py-3, .py-4, .py-16 {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+      }
+      .shadow-lg, .shadow-xl, .shadow-2xl {
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      }
+      #special-dishes-list > div:hover {
+        transform: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      }
+      #special-dishes-list > div.selected {
+        transform: none;
+        box-shadow: 0 4px 12px rgba(34,197,94,0.4);
+      }
+      #home img {
+        max-width: 80%;
+        margin: 0 auto;
+      }
+      .text-4xl, .text-3xl {
+        font-size: 1.75rem;
+      }
+      .text-xl, .text-lg {
+        font-size: 1rem;
+      }
+    }
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 1.25rem;
+      }
+      h3 {
+        font-size: 1rem;
+      }
+      p, button, input, textarea {
+        font-size: 0.75rem;
+      }
+      .rounded-2xl, .rounded-3xl, .rounded-xl {
+        border-radius: 0.5rem;
+      }
+      #special-dishes-list > div {
+        width: 200px;
+        min-width: 180px;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 via-white to-orange-50 font-sans overflow-x-hidden">
+  <div id="cart-notification" class="fixed top-4 right-4 bg-green-500 text-white px-3 py-2 rounded-lg shadow-md transition-opacity duration-300 hidden z-50 animate__animated animate__fadeIn"></div>
+
+  <header class="bg-white shadow fixed w-full top-0 z-20 border-b border-gray-200">
+    <div class="container mx-auto py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <a href="index.html"><img class="h-12 sm:h-14" src="../images/image(5).jpg" alt="FoodHub Logo"></a>
+      </div>
+      <button id="menu-toggle" class="md:hidden text-gray-600 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+      <nav id="nav-menu" class="hidden md:flex md:items-center md:space-x-4 absolute md:static top-14 left-0 w-full md:w-auto bg-white md:bg-transparent shadow md:shadow-none p-4 md:p-0">
+        <a href="#home" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">Home</a>
+        <a href="#services" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">Services</a>
+        <a href="#special-dishes" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">Foods</a>
+        <a href="#contact-section" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">Contact Us</a>
+        <a href="#about" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">About</a>
+        <a href="cart.html" class="relative block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">
+          <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
+          </svg>
+          <span id="cart-count" class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full px-1.5 py-0.5">0</span>
+        </a>
+        <div class="flex flex-col md:flex-row md:space-x-2 mt-2 md:mt-0">
+          <a href="signin.html" class="block md:inline text-gray-600 border border-gray-300 rounded-full px-3 py-1 text-sm hover:bg-gray-100 mb-2 md:mb-0 transition-all duration-300">Sign In</a>
+          <a href="signup.html" class="block md:inline text-white bg-green-500 rounded-full px-3 py-1 text-sm hover:bg-green-600 shadow transition-all duration-300">Sign Up</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section id="home" class="pt-20 pb-12 bg-gradient-to-br from-green-50 via-white to-orange-50 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-32 h-32 bg-green-200 rounded-full opacity-30 -z-10"></div>
+    <div class="absolute bottom-0 right-0 w-48 h-48 bg-orange-200 rounded-full opacity-20 -z-10"></div>
+    <div id="three-bg" class="absolute inset-0 -z-10"></div>
+    <div class="container mx-auto flex flex-col md:flex-row items-center">
+      <div class="md:w-1/2 text-center md:text-left mb-8 md:mb-0">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-800 mb-4 tracking-tight">Be The Fastest In Your Delivery</h2>
+        <p class="text-sm sm:text-base text-gray-600 mb-6">"Life's too short for ordinary food. Come join us."</p>
+        <a href="#special-dishes" class="inline-block bg-green-500 text-white px-4 sm:px-6 py-2 sm:py-3 text-base sm:text-lg rounded-full shadow-md hover:bg-green-600 transition-all duration-300">Order Now</a>
+      </div>
+      <div class="md:w-1/2 flex justify-center">
+        <img src="../images/suri (1).png" alt="Food Delivery" class="w-full max-w-sm rounded-full shadow-md transform transition-transform duration-500 hover:scale-95">
+      </div>
+    </div>
+  </section>
+
+  <section id="special-dishes" class="container mx-auto py-12">
+    <h2 class="text-2xl sm:text-3xl font-extrabold text-center mb-10 text-orange-500">Our Explored Dishes</h2>
+    <div class="flex justify-center mb-8">
+      <div class="relative w-full max-w-sm">
+        <input 
+          id="special-search"
+          type="text"
+          placeholder="Search special dishes..."
+          class="w-full px-4 py-2 rounded-full border-2 border-green-400 focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all duration-300 shadow-md"
+        >
+        <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" stroke-width="2"></circle>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35"></path>
+          </svg>
+        </span>
+      </div>
+    </div>
+    <div class="flex justify-center mb-6 space-x-2 flex-wrap gap-2">
+      <button class="portion-filter bg-green-500 text-white px-3 py-1.5 rounded-full hover:bg-green-600 transition-all duration-300 text-sm" data-portion="all">All</button>
+      <button class="portion-filter bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full hover:bg-gray-300 transition-all duration-300 text-sm" data-portion="starters">Starters</button>
+      <button class="portion-filter bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full hover:bg-gray-300 transition-all duration-300 text-sm" data-portion="badam-milk">Badam Milk</button>
+      <button class="portion-filter bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full hover:bg-gray-300 transition-all duration-300 text-sm" data-portion="snacks">Snacks</button>
+      <button class="portion-filter bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full hover:bg-gray-300 transition-all duration-300 text-sm" data-portion="special-combo">Suribabu Special Combo</button>
+    </div>
+    <div id="special-dishes-list" class="py-2 px-1">
+      <div class="bg-white rounded-2xl shadow-md p-5 text-center flex flex-col items-center overflow-hidden" data-portion="special-combo" data-name="Suribabu Kodi Pulao">
+        <img src="../images/s5.webp" alt="Suribabu Kodi Pulao" class="rounded-lg shadow-md w-full h-36 object-cover mb-3 transition-transform duration-300 hover:scale-105">
+        <h3 class="text-base sm:text-lg font-bold mb-2">Suribabu Kodi Pulao</h3>
+        <button class="bg-gradient-to-r from-green-400 to-green-600 text-black px-4 py-1.5 text-sm rounded-full hover:from-green-500 hover:to-green-700 shadow transition-all duration-300 mt-auto" onclick="addToCart({id: 12, name: 'Suribabu Kodi Pulao'}); selectCard(this)">Add to Cart</button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-5 text-center flex flex-col items-center overflow-hidden" data-portion="special-combo" data-name="Non-Veg Special Combo">
+        <img src="../images/special combo.jpg" alt="Non-Veg Special Combo" class="rounded-lg shadow-md w-full h-36 object-cover mb-3 transition-transform duration-300 hover:scale-105">
+        <h3 class="text-base sm:text-lg font-bold mb-2">Non-Veg Special Combo</h3>
+        <button class="bg-gradient-to-r from-green-400 to-green-600 text-black px-4 py-1.5 text-sm rounded-full hover:from-green-500 hover:to-green-700 shadow transition-all duration-300 mt-auto" onclick="addToCart({id: 11, name: 'Non-Veg Special Combo'}); selectCard(this)">Add to Cart</button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-5 text-center flex flex-col items-center overflow-hidden" data-portion="special-combo" data-name="Kodi Pulao Combo">
+        <img src="../images/kodi palav.jpg" alt="Kodi Pulao Combo" class="rounded-lg shadow-md w-full h-36 object-cover mb-3 transition-transform duration-300 hover:scale-105">
+        <h3 class="text-base sm:text-lg font-bold mb-2">Kodi Pulao Combo</h3>
+        <button class="bg-gradient-to-r from-green-400 to-green-600 text-black px-4 py-1.5 text-sm rounded-full hover:from-green-500 hover:to-green-700 shadow transition-all duration-300 mt-auto" onclick="addToCart({id: 9, name: 'Kodi Pulao Combo'}); selectCard(this)">Add to Cart</button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-5 text-center flex flex-col items-center overflow-hidden" data-portion="special-combo" data-name="Veg Special Combo">
+        <img src="../images/veg pala0.webp" alt="Veg Special Combo" class="rounded-lg shadow-md w-full h-36 object-cover mb-3 transition-transform duration-300 hover:scale-105">
+        <h3 class="text-base sm:text-lg font-bold mb-2">Veg Special Combo</h3>
+        <button class="bg-gradient-to-r from-green-400 to-green-600 text-black px-4 py-1.5 text-sm rounded-full hover:from-green-500 hover:to-green-700 shadow transition-all duration-300 mt-auto" onclick="addToCart({id: 10, name: 'Veg Special Combo'}); selectCard(this)">Add to Cart</button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-5 text-center flex flex-col items-center overflow-hidden" data-portion="starters" data-name="Paneer Tikka">
+        <img src="../images/paneer tikka.jpg" alt="Paneer Tikka" class="rounded-lg shadow-md w-full h-36 object-cover mb-3 transition-transform duration-300 hover:scale-105">
+        <h3 class="text-base sm:text-lg font-bold mb-2">Paneer Tikka</h3>
+        <button class="bg-gradient-to-r from-green-400 to-green-600 text-black px-4 py-1.5 text-sm rounded-full hover:from-green-500 hover:to-green-700 shadow transition-all duration-300 mt-auto" onclick="addToCart({id: 1, name: 'Paneer Tikka'}); selectCard(this)">Add to Cart</button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-5 text-center flex flex-col items-center overflow-hidden" data-portion="starters" data-name="Chicken 65">
+        <img src="../images/chc 65.jpg" alt="Chicken 65" class="rounded-lg shadow-md w-full h-36 object-cover mb-3 transition-transform duration-300 hover:scale-105">
+        <h3 class="text-base sm:text-lg font-bold mb-2">Chicken 65</h3>
+        <button class="bg-gradient-to-r from-green-400 to-green-600 text-black px-4 py-1.5 text-sm rounded-full hover:from-green-500 hover:to-green-700 shadow transition-all duration-300 mt-auto" onclick="addToCart({id: 2, name: 'Chicken 65'}); selectCard(this)">Add to Cart</button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-5 text-center flex flex-col items-center overflow-hidden" data-portion="starters" data-name="Veg Manchurian">
+        <img src="../images/veg manchuriya.jpeg" alt="Veg Manchurian" class="rounded-lg shadow-md w-full h-36 object-cover mb-3 transition-transform duration-300 hover:scale-105">
+        <h3 class="text-base sm:text-lg font-bold mb-2">Veg Manchurian</h3>
+        <button class="bg-gradient-to-r from-green-400 to-green-600 text-black px-4 py-1.5 text-sm rounded-full hover:from-green-500 hover:to-green-700 shadow transition-all duration-300 mt-auto" onclick="addToCart({id: 3, name: 'Veg Manchurian'}); selectCard(this)">Add to Cart</button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-5 text-center flex flex-col items-center overflow-hidden" data-portion="badam-milk" data-name="Classic Badam Milk">
+        <img src="../images/badam cls.jpg" alt="Classic Badam Milk" class="rounded-lg shadow-md w-full h-36 object-cover mb-3 transition-transform duration-300 hover:scale-105">
+        <h3 class="text-base sm:text-lg font-bold mb-2">Classic Badam Milk</h3>
+        <button class="bg-gradient-to-r from-green-400 to-green-600 text-black px-4 py-1.5 text-sm rounded-full hover:from-green-500 hover:to-green-700 shadow transition-all duration-300 mt-auto" onclick="addToCart({id: 4, name: 'Classic Badam Milk'}); selectCard(this)">Add to Cart</button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-5 text-center flex flex-col items-center overflow-hidden" data-portion="badam-milk" data-name="Kesar Badam Milk">
+        <img src="../images/kesar bm.jpeg" alt="Kesar Badam Milk" class="rounded-lg shadow-md w-full h-36 object-cover mb-3 transition-transform duration-300 hover:scale-105">
+        <h3 class="text-base sm:text-lg font-bold mb-2">Kesar Badam Milk</h3>
+        <button class="bg-gradient-to-r from-green-400 to-green-600 text-black px-4 py-1.5 text-sm rounded-full hover:from-green-500 hover:to-green-700 shadow transition-all duration-300 mt-auto" onclick="addToCart({id: 5, name: 'Kesar Badam Milk'}); selectCard(this)">Add to Cart</button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-5 text-center flex flex-col items-center overflow-hidden" data-portion="snacks" data-name="Samosa">
+        <img src="../images/samosa.jpeg" alt="Samosa" class="rounded-lg shadow-md w-full h-36 object-cover mb-3 transition-transform duration-300 hover:scale-105">
+        <h3 class="text-base sm:text-lg font-bold mb-2">Samosa</h3>
+        <button class="bg-gradient-to-r from-green-400 to-green-600 text-black px-4 py-1.5 text-sm rounded-full hover:from-green-500 hover:to-green-700 shadow transition-all duration-300 mt-auto" onclick="addToCart({id: 6, name: 'Samosa'}); selectCard(this)">Add to Cart</button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-5 text-center flex flex-col items-center overflow-hidden" data-portion="snacks" data-name="Mirchi Bajji">
+        <img src="../images/bujji-mirchi.jpg" alt="Mirchi Bajji" class="rounded-lg shadow-md w-full h-36 object-cover mb-3 transition-transform duration-300 hover:scale-105">
+        <h3 class="text-base sm:text-lg font-bold mb-2">Mirchi Bajji</h3>
+        <button class="bg-gradient-to-r from-green-400 to-green-600 text-black px-4 py-1.5 text-sm rounded-full hover:from-green-500 hover:to-green-700 shadow transition-all duration-300 mt-auto" onclick="addToCart({id: 7, name: 'Mirchi Bajji'}); selectCard(this)">Add to Cart</button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-5 text-center flex flex-col items-center overflow-hidden" data-portion="snacks" data-name="Onion Pakoda">
+        <img src="../images/Onion-Pakoda.jpg" alt="Onion Pakoda" class="rounded-lg shadow-md w-full h-36 object-cover mb-3 transition-transform duration-300 hover:scale-105">
+        <h3 class="text-base sm:text-lg font-bold mb-2">Onion Pakoda</h3>
+        <button class="bg-gradient-to-r from-green-400 to-green-600 text-black px-4 py-1.5 text-sm rounded-full hover:from-green-500 hover:to-green-700 shadow transition-all duration-300 mt-auto" onclick="addToCart({id: 8, name: 'Onion Pakoda'}); selectCard(this)">Add to Cart</button>
+      </div>
+    </div>
+    <div id="no-dish-message" class="flex justify-center mt-6 hidden">
+      <div class="bg-gradient-to-r from-orange-100 via-yellow-100 to-red-100 border-2 border-orange-400 rounded-lg px-6 py-4 shadow-md flex items-center gap-2">
+        <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01"></path>
+        </svg>
+        <span class="text-base font-semibold text-orange-700">There is no dish with that name.</span>
+      </div>
+    </div>
+    <div class="text-center mt-8 flex flex-col items-center gap-3">
+      <a href="#special-dishes" class="bg-gray-200 text-gray-800 px-4 sm:px-6 py-2 sm:py-3 text-base rounded-full hover:bg-gray-300 shadow transition-all duration-300">Explore More</a>
+      <a href="cart.html" class="bg-orange-500 text-white px-6 py-2 text-base rounded-full shadow-md hover:bg-orange-600 transition-all duration-300">Check Your Cart</a>
+    </div>
+  </section>
+
+  <section id="special-dishes-list-awesome" class="container mx-auto py-12">
+    <h2 class="text-2xl sm:text-3xl font-extrabold text-center mb-10 text-gradient bg-gradient-to-r from-green-500 via-orange-400 to-pink-500 bg-clip-text text-transparent">Chef's Signature Picks</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="relative group rounded-2xl overflow-hidden shadow-md bg-white hover:shadow-green-200 transition-all duration-300">
+        <img src="../images/four.jpeg" alt="Suribabu KodiPalav" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
+        <div class="absolute top-3 right-3 bg-gradient-to-br from-orange-400 to-pink-500 text-white px-2 py-1 rounded-full text-xs font-bold shadow-md">NEW</div>
+        <div class="p-5 flex flex-col h-full">
+          <h3 class="text-base sm:text-lg font-bold mb-2 text-gray-800 group-hover:text-green-600 transition-colors duration-300">Suribabu KodiPalav</h3>
+          <p class="text-gray-500 mb-3 text-sm">Aromatic rice dish with tender chicken and spices.</p>
+          <div class="flex items-center justify-between mt-auto">
+            <span class="text-base font-bold text-orange-500">$14.99</span>
+            <button class="bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-1.5 text-sm rounded-full shadow hover:from-green-500 hover:to-green-700 transition-all duration-300" onclick="addToCart({id: 101, name: 'Suribabu KodiPalav', price: 14.99}); selectCard(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+      <div class="relative group rounded-2xl overflow-hidden shadow-md bg-white hover:shadow-green-200 transition-all duration-300">
+        <img src="../images/three.jpeg" alt="Chilly Chicken" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
+        <div class="absolute top-3 right-3 bg-gradient-to-br from-green-400 to-green-600 text-white px-2 py-1 rounded-full text-xs font-bold shadow-md">HEALTHY</div>
+        <div class="p-5 flex flex-col h-full">
+          <h3 class="text-base sm:text-lg font-bold mb-2 text-gray-800 group-hover:text-green-600 transition-colors duration-300">Chilly Chicken</h3>
+          <p class="text-gray-500 mb-3 text-sm">Chicken with a spicy twist.</p>
+          <div class="flex items-center justify-between mt-auto">
+            <span class="text-base font-bold text-orange-500">$9.99</span>
+            <button class="bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-1.5 text-sm rounded-full shadow hover:from-green-500 hover:to-green-700 transition-all duration-300" onclick="addToCart({id: 102, name: 'Chilly Chicken', price: 9.99}); selectCard(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+      <div class="relative group rounded-2xl overflow-hidden shadow-md bg-white hover:shadow-green-200 transition-all duration-300">
+        <img src="../images/download.jpeg" alt="Chicken Fried Biriyani" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
+        <div class="absolute top-3 right-3 bg-gradient-to-br from-blue-400 to-green-400 text-white px-2 py-1 rounded-full text-xs font-bold shadow-md">POPULAR</div>
+        <div class="p-5 flex flex-col h-full">
+          <h3 class="text-base sm:text-lg font-bold mb-2 text-gray-800 group-hover:text-green-600 transition-colors duration-300">Chicken Fried Biriyani</h3>
+          <p class="text-gray-500 mb-3 text-sm">Aromatic chicken fried biriyani with the freshest spices and herbs.</p>
+          <div class="flex items-center justify-between mt-auto">
+            <span class="text-base font-bold text-orange-500">$19.50</span>
+            <button class="bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-1.5 text-sm rounded-full shadow hover:from-green-500 hover:to-green-700 transition-all duration-300" onclick="addToCart({id: 103, name: 'Chicken Fried Biriyani', price: 19.50}); selectCard(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+      <div class="relative group rounded-2xl overflow-hidden shadow-md bg-white hover:shadow-green-200 transition-all duration-300">
+        <img src="../images/kaju.jpeg" alt="Kaju Chicken Pakoda" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
+        <div class="absolute top-3 right-3 bg-gradient-to-br from-pink-400 to-orange-400 text-white px-2 py-1 rounded-full text-xs font-bold shadow-md">FAMILY</div>
+        <div class="p-5 flex flex-col h-full">
+          <h3 class="text-base sm:text-lg font-bold mb-2 text-gray-800 group-hover:text-green-600 transition-colors duration-300">Kaju Chicken Pakoda</h3>
+          <p class="text-gray-500 mb-3 text-sm">Chicken pakoda with a crispy exterior and tender interior.</p>
+          <div class="flex items-center justify-between mt-auto">
+            <span class="text-base font-bold text-orange-500">$29.99</span>
+            <button class="bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-1.5 text-sm rounded-full shadow hover:from-green-500 hover:to-green-700 transition-all duration-300" onclick="addToCart({id: 104, name: 'Kaju Chicken Pakoda', price: 29.99}); selectCard(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="bg-gradient-to-r from-green-100 via-white to-orange-100 py-12 relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-24 h-24 bg-green-200 rounded-full opacity-20 -z-10"></div>
+    <div class="container mx-auto flex flex-col md:flex-row items-center">
+      <div class="md:w-1/2 order-2 md:order-1 p-4">
+        <img src="../images/download2.jpeg" alt="Healthy Food" class="rounded-lg shadow-md w-full object-cover">
+      </div>
+      <div class="md:w-1/2 text-center md:text-left mb-8 md:mb-0 order-1 md:order-2">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-4">Healthy Food In A Healthier Life In The Future</h2>
+        <p class="text-sm sm:text-base text-gray-600 mb-6">Future food choices will emphasize sustainability. Plant-based proteins, lab-grown meat, and eco-farming will help protect the planet while nourishing the body.</p>
+        <a href="#special-dishes" class="inline-block bg-green-500 text-white px-4 sm:px-6 py-2 sm:py-3 text-base rounded-full shadow-md hover:bg-green-600 transition-all duration-300">Explore More</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact-section" class="container mx-auto py-12 text-center">
+    <h2 class="text-2xl sm:text-3xl font-extrabold mb-4 text-orange-500">Contact Us</h2>
+    <p class="text-sm sm:text-base text-gray-700 mb-6">
+      We'd love to hear from you! Fill out the form below and our team will get back to you soon.
+    </p>
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+      <div class="mb-4">
+        <input type="text" name="name" placeholder="Your Name" required class="w-full px-3 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all duration-300">
+      </div>
+      <div class="mb-4">
+        <input type="email" name="email" placeholder="Your Email" required class="w-full px-3 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all duration-300">
+      </div>
+      <div class="mb-4">
+        <textarea name="message" rows="4" placeholder="Your Message" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all duration-300"></textarea>
+      </div>
+      <button type="button" onclick="showNotification('Message sent!')" class="bg-orange-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-orange-600 transition-all duration-300">
+        Send Message
+      </button>
+    </div>
+  </section>
+
+  <section id="conclusion" class="container mx-auto py-12 text-center">
+    <h2 class="text-2xl sm:text-3xl font-extrabold mb-4 text-green-600">Ready to Enjoy Delicious Food?</h2>
+    <p class="text-sm sm:text-base text-gray-700 mb-6">
+      Suribabu Kodi Palav brings you fresh, healthy, and tasty meals right to your doorstep. Explore our menu, add your favorites to the cart, and experience fast delivery with a smile. Join our community and make every meal special!
+    </p>
+    <a href="#special-dishes" class="inline-block bg-orange-500 text-white px-6 py-2 text-base rounded-full shadow-md hover:bg-orange-600 transition-all duration-300">
+      Start Your Order
+    </a>
+  </section>
+
+  <footer id="contact" class="bg-gradient-to-r from-gray-900 via-black to-gray-900 py-8 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-20 h-20 bg-green-900 rounded-full opacity-30 -z-10"></div>
+    <div class="absolute bottom-0 right-0 w-24 h-24 bg-orange-900 rounded-full opacity-30 -z-10"></div>
+    <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center sm:text-left">
+      <div>
+        <h3 class="text-base sm:text-lg font-bold mb-2 text-green-400 flex items-center justify-center sm:justify-start gap-2">
+          <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01"></path>
+          </svg>
+          Suribabu Kodi Palav
+        </h3>
+        <p class="text-gray-300 text-sm sm:text-base">Delivering fresh and healthy food to your door.</p>
+      </div>
+      <div>
+        <h3 class="text-base sm:text-lg font-bold mb-2 text-green-400">Support</h3>
+        <p class="text-gray-300 text-sm sm:text-base hover:text-orange-400 transition-colors duration-300 cursor-pointer">Contact Us</p>
+        <p class="text-gray-300 text-sm sm:text-base hover:text-orange-400 transition-colors duration-300 cursor-pointer">FAQs</p>
+      </div>
+      <div>
+        <h3 class="text-base sm:text-lg font-bold mb-2 text-green-400">Useful Links</h3>
+        <p class="text-gray-300 text-sm sm:text-base hover:text-orange-400 transition-colors duration-300 cursor-pointer">Privacy Policy</p>
+        <p class="text-gray-300 text-sm sm:text-base hover:text-orange-400 transition-colors duration-300 cursor-pointer">Terms of Service</p>
+      </div>
+      <div>
+        <h3 class="text-base sm:text-lg font-bold mb-2 text-green-400">Get In Touch</h3>
+        <p class="text-gray-300 text-sm sm:text-base flex items-center justify-center sm:justify-start gap-2">
+          <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="7" r="4" stroke-width="2"></circle>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12v1a4 4 0 01-8 0v-1"></path>
+          </svg>
+          support@suribabukodipalav.com
+        </p>
+        <p class="text-gray-300 text-sm sm:text-base flex items-center justify-center sm:justify-start gap-2">
+          <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2v-8a2 2 0 012-2h2"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12v4m0 0l-2-2m2 2l2-2"></path>
+          </svg>
+          123 Food Street, City
+        </p>
+      </div>
+    </div>
+    <div class="mt-6 text-center text-gray-400 text-xs sm:text-sm">
+      © 2025 Suribabu Kodi Palav. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function showNotification(message) {
+      const notification = document.getElementById('cart-notification');
+      if (notification) {
+        notification.textContent = message;
+        notification.classList.remove('hidden');
+        notification.classList.add('animate__animated', 'animate__fadeIn');
+        setTimeout(() => {
+          notification.classList.remove('animate__fadeIn');
+          notification.classList.add('animate__fadeOut');
+          setTimeout(() => {
+            notification.classList.add('hidden');
+            notification.classList.remove('animate__animated', 'animate__fadeOut');
+          }, 300);
+        }, 2000);
+      }
+    }
+
+    function addToCart(item) {
+      cart.push(item);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      document.getElementById('cart-count').textContent = cart.length;
+      showNotification(`${item.name} added to cart!`);
+    }
+
+    function selectCard(button) {
+      const cards = document.querySelectorAll('#special-dishes-list > div, #special-dishes-list-awesome > div');
+      cards.forEach(card => card.classList.remove('selected'));
+      const card = button.closest('div');
+      if (card) {
+        card.classList.add('selected');
+        setTimeout(() => {
+          card.classList.remove('selected');
+        }, 1000);
+      }
+    }
+
+    document.getElementById('cart-count').textContent = cart.length;
+
+    const portionFilters = document.querySelectorAll('.portion-filter');
+    const dishes = document.querySelectorAll('#special-dishes-list > div');
+    const noDishMessage = document.getElementById('no-dish-message');
+    const searchInput = document.getElementById('special-search');
+
+    portionFilters.forEach(button => {
+      button.addEventListener('click', () => {
+        portionFilters.forEach(btn => {
+          btn.classList.remove('bg-green-500', 'text-white');
+          btn.classList.add('bg-gray-200', 'text-gray-800');
+        });
+        button.classList.remove('bg-gray-200', 'text-gray-800');
+        button.classList.add('bg-green-500', 'text-white');
+
+        const portion = button.getAttribute('data-portion');
+        let hasVisibleDishes = false;
+
+        dishes.forEach(dish => {
+          const dishPortion = dish.getAttribute('data-portion');
+          if (portion === 'all' || dishPortion === portion) {
+            dish.style.display = 'block';
+            hasVisibleDishes = true;
+          } else {
+            dish.style.display = 'none';
+          }
+        });
+
+        noDishMessage.classList.toggle('hidden', hasVisibleDishes);
+      });
+    });
+
+    searchInput.addEventListener('input', () => {
+      const searchTerm = searchInput.value.toLowerCase();
+      const activePortion = document.querySelector('.portion-filter.bg-green-500').getAttribute('data-portion');
+      let hasVisibleDishes = false;
+
+      dishes.forEach(dish => {
+        const dishName = dish.getAttribute('data-name').toLowerCase();
+        const dishPortion = dish.getAttribute('data-portion');
+        if (dishName.includes(searchTerm) && (activePortion === 'all' || dishPortion === activePortion)) {
+          dish.style.display = 'block';
+          hasVisibleDishes = true;
+        } else {
+          dish.style.display = 'none';
+        }
+      });
+
+      noDishMessage.classList.toggle('hidden', hasVisibleDishes);
+    });
+
+    const menuToggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    let menuOpen = false;
+
+    const hamburgerSVG = `
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    `;
+    const crossSVG = `
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    `;
+
+    function isMobile() {
+      return window.innerWidth < 768;
+    }
+
+    function setMenuInitialState() {
+      if (isMobile()) {
+        navMenu.style.transition = 'max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s cubic-bezier(0.4,0,0.2,1)';
+        navMenu.style.overflow = 'hidden';
+        navMenu.style.maxHeight = '0';
+        navMenu.style.opacity = '0';
+        navMenu.classList.add('hidden');
+        menuToggle.innerHTML = hamburgerSVG;
+        menuOpen = false;
+        menuToggle.style.display = '';
+      } else {
+        navMenu.style.transition = '';
+        navMenu.style.overflow = '';
+        navMenu.style.maxHeight = '';
+        navMenu.style.opacity = '';
+        navMenu.classList.remove('hidden');
+        navMenu.classList.remove('flex', 'flex-col', 'items-center');
+        menuToggle.style.display = 'none';
+      }
+    }
+
+    setMenuInitialState();
+    window.addEventListener('resize', setMenuInitialState);
+
+    menuToggle.addEventListener('click', () => {
+      if (!isMobile()) return;
+      if (!menuOpen) {
+        navMenu.classList.remove('hidden');
+        navMenu.classList.add('flex', 'flex-col', 'items-center', 'animate__animated', 'animate__fadeInDown');
+        navMenu.style.maxHeight = navMenu.scrollHeight + 'px';
+        navMenu.style.opacity = '1';
+        menuToggle.innerHTML = crossSVG;
+        menuOpen = true;
+      } else {
+        navMenu.style.maxHeight = '0';
+        navMenu.style.opacity = '0';
+        navMenu.classList.remove('animate__fadeInDown');
+        menuToggle.innerHTML = hamburgerSVG;
+        menuOpen = false;
+        setTimeout(() => {
+          if (!menuOpen && isMobile()) {
+            navMenu.classList.add('hidden');
+            navMenu.classList.remove('flex', 'flex-col', 'items-center', 'animate__animated');
+          }
+        }, 400);
+      }
+    });
+
+    document.querySelectorAll('a[href="#contact"]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('three-bg').appendChild(renderer.domElement);
+
+    const bunTopGeometry = new THREE.SphereGeometry(2, 64, 64, 0, Math.PI * 2, 0, Math.PI / 1.5);
+    const bunTopMaterial = new THREE.MeshPhongMaterial({ color: 0xf5c16c, shininess: 60 });
+    const bunTop = new THREE.Mesh(bunTopGeometry, bunTopMaterial);
+    bunTop.position.y = 1.2;
+    scene.add(bunTop);
+
+    const bunBottomGeometry = new THREE.CylinderGeometry(2, 2, 0.7, 64);
+    const bunBottomMaterial = new THREE.MeshPhongMaterial({ color: 0xf5c16c, shininess: 60 });
+    const bunBottom = new THREE.Mesh(bunBottomGeometry, bunBottomMaterial);
+    bunBottom.position.y = -1.2;
+    scene.add(bunBottom);
+
+    const pattyGeometry = new THREE.CylinderGeometry(1.7, 1.7, 0.5, 64);
+    const pattyMaterial = new THREE.MeshPhongMaterial({ color: 0x7c4a03 });
+    const patty = new THREE.Mesh(pattyGeometry, pattyMaterial);
+    patty.position.y = 0.2;
+    scene.add(patty);
+
+    const cheeseGeometry = new THREE.CylinderGeometry(1.8, 1.8, 0.15, 64);
+    const cheeseMaterial = new THREE.MeshPhongMaterial({ color: 0xffe066 });
+    const cheese = new THREE.Mesh(cheeseGeometry, cheeseMaterial);
+    cheese.position.y = 0.5;
+    scene.add(cheese);
+
+    const lettuceGeometry = new THREE.CylinderGeometry(1.9, 1.9, 0.1, 64);
+    const lettuceMaterial = new THREE.MeshPhongMaterial({ color: 0x22c55e });
+    const lettuce = new THREE.Mesh(lettuceGeometry, lettuceMaterial);
+    lettuce.position.y = 0.7;
+    scene.add(lettuce);
+
+    const light = new THREE.PointLight(0xffffff, 1, 100);
+    light.position.set(10, 10, 10);
+    scene.add(light);
+
+    camera.position.z = 7;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      bunTop.rotation.y += 0.005;
+      bunBottom.rotation.y += 0.005;
+      patty.rotation.y += 0.005;
+      cheese.rotation.y += 0.005;
+      lettuce.rotation.y += 0.005;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>

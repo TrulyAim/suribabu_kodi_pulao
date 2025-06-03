@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - Suribabu Kodi Pulao</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      background: #f3f4f6;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #22c55e;
+      border-radius: 8px;
+    }
+    @media (max-width: 768px) {
+      .max-w-7xl, .max-w-3xl, .max-w-xl, .max-w-md {
+        max-width: 100% !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+      }
+      .grid-cols-1, .sm\:grid-cols-2, .lg\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+      }
+      .flex-row, .md\:flex-row {
+        flex-direction: column !important;
+      }
+      .rounded-2xl, .rounded-3xl, .rounded-xl {
+        border-radius: 1rem !important;
+      }
+      .h-40, .w-40, .h-56, .w-56, .h-32, .w-32, .h-20, .w-20 {
+        height: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .overflow-x-auto {
+        overflow-x: scroll !important;
+      }
+      .px-4, .py-16, .p-6, .px-6, .py-3, .px-8, .py-4 {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+      }
+      /* Remove font-size override for headings */
+      .text-4xl, .text-3xl, .text-2xl, .text-xl, .text-lg {
+        font-size: revert !important;
+      }
+      .shadow-lg, .shadow-xl, .shadow-2xl {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+      }
+    }
+    @media (max-width: 480px) {
+      .rounded-2xl, .rounded-3xl, .rounded-xl {
+        border-radius: 0.5rem !important;
+      }
+      .h-40, .w-40, .h-56, .w-56, .h-32, .w-32, .h-20, .w-20 {
+        height: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      /* Remove font-size override for headings */
+      .text-4xl, .text-3xl, .text-2xl, .text-xl, .text-lg {
+        font-size: revert !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 via-white to-orange-50 font-sans overflow-x-hidden">
+  <!-- Header -->
+  <!-- <header class="bg-white shadow fixed w-full top-0 z-20 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
+          
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8"></path>
+          </svg>
+          <img class="w-[200px] h-10" src="../images/suri (1).png" alt="">
+        </div>
+        <h1 class="text-2xl font-extrabold text-orange-500 tracking-wide">Suribabu Kodi Pulao</h1>
+      </div>
+      <button id="menu-toggle" class="md:hidden text-gray-600 focus:outline-none">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+      <nav id="nav-menu" class="hidden md:flex md:items-center md:space-x-4 absolute md:static top-16 left-0 w-full md:w-auto bg-white md:bg-transparent shadow md:shadow-none p-4 md:p-0">
+        <a href="foodhome.html#home" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">Home</a>
+        <a href="foodhome.html#services" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">Services</a>
+        <a href="foodhome.html#special-dishes" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">Foods</a>
+        <a href="foodhome.html#contact-section" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">Contact</a>
+        <a href="foodhome.html#about" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">About</a>
+        <a href="foodhome.html#cart" class="relative block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">
+          <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
+          </svg>
+          <span id="cart-count" class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full px-1.5 py-0.5">0</span>
+        </a>
+        <div class="flex flex-col md:flex-row md:space-x-2 mt-2 md:mt-0">
+          <a href="signin.html" class="block md:inline text-gray-600 border border-gray-300 rounded-full px-4 py-1 text-sm hover:bg-gray-100 mb-2 md:mb-0 transition-all duration-300">Sign In</a>
+          <a href="signup.html" class="block md:inline text-white bg-green-500 rounded-full px-4 py-1 text-sm hover:bg-green-600 shadow-lg transition-all duration-300">Sign Up</a>
+        </div>
+      </nav>
+    </div>
+  </header> -->
+
+
+  <!-- another navbar -->
+   <header class="bg-white shadow fixed w-full top-0 z-20 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <div class="w-56 h-10 rectangle-full flex items-center justify-center">
+          <!-- <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8"></path>
+          </svg> -->
+          <a href="index.html"><img class="h-[60px]"   src="../images/image(5).jpg" alt=""></a>
+        </div>
+      </div>
+      <button id="menu-toggle" class="md:hidden text-gray-600 focus:outline-none">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+      <nav id="nav-menu" class="hidden md:flex md:items-center md:space-x-4 absolute md:static top-16 left-0 w-full md:w-auto bg-white md:bg-transparent shadow md:shadow-none p-4 md:p-0">
+        <a href="index.html" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">Home</a>
+        <a href="index.html#services" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">Services</a>
+        <a href="index.html#special-dishes" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">Foods</a>
+        <a href="index.html#contact-section" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">Contact Us</a>
+        <a href="index.html#about" class="block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">About</a>
+        <a href="cart.html" class="relative block md:inline text-gray-600 hover:text-orange-500 mb-2 md:mb-0 transition-colors duration-300">
+          <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
+          </svg>
+          <span id="cart-count" class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full px-1.5 py-0.5">0</span>
+        </a>
+        <div class="flex flex-col md:flex-row md:space-x-2 mt-2 md:mt-0">
+          <a href="signin.html" class="block md:inline text-gray-600 border border-gray-300 rounded-full px-4 py-1 text-sm hover:bg-gray-100 mb-2 md:mb-0 transition-all duration-300">Sign In</a>
+          <a href="signup.html" class="block md:inline text-white bg-green-500 rounded-full px-4 py-1 text-sm hover:bg-green-600 shadow-lg transition-all duration-300" style="background-color: rgb(34, 197, 94);">Sign Up</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+
+  <!-- Spacer for fixed navbar -->
+  <div class="h-20 md:h-0"></div>
+
+  <!-- Sign In Section -->
+  <section id="signin" class="max-w-3xl mx-auto px-4 py-16 pt-24 text-center sm:mt-5">
+    <div class="relative">
+      <div class="absolute top-0 left-0 w-40 h-40 bg-green-200 rounded-full opacity-30 -z-10"></div>
+      <div class="absolute bottom-0 right-0 w-56 h-56 bg-orange-200 rounded-full opacity-20 -z-10"></div>
+    </div>
+    <h1 class="text-3xl sm:text-10xl font-extrabold mb-4 text-orange-500 sm:mt-0 pt-20 lg:pt-0"  >Sign In to Your Account</h1>
+    <p class="text-base sm:text-lg text-gray-700 mb-8">
+      Welcome back! Sign in to order your favorite meals and track your orders.
+    </p>
+    <form class="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-8">
+      <div class="mb-4">
+        <input type="email" name="email" placeholder="Email Address" required class="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all duration-300">
+      </div>
+      <div class="mb-6">
+        <input type="password" name="password" placeholder="Password" required class="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all duration-300">
+      </div>
+      <button type="submit" class="w-full bg-orange-500 text-white px-8 py-3 rounded-full shadow-lg hover:bg-orange-600 transition-all duration-300">
+        Sign In
+      </button>
+    </form>
+    <p class="text-base sm:text-lg text-gray-700 mt-4">
+      Don't have an account? <a href="signup.html" class="text-green-500 hover:text-green-600 transition-colors duration-300">Sign Up</a>
+    </p>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact" class="bg-gradient-to-r from-black via-gray-900 to-black py-10 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-24 h-24 bg-green-300 rounded-full opacity-20 -z-10"></div>
+    <div class="absolute bottom-0 right-0 w-32 h-32 bg-orange-300 rounded-full opacity-20 -z-10"></div>
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center sm:text-left relative z-10">
+      <div>
+        <h3 class="text-lg sm:text-xl font-bold mb-2 text-green-400 flex items-center justify-center sm:justify-start gap-2">
+          <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01"></path>
+          </svg>
+          Suribabu Kodi Palao
+        </h3>
+        <p class="text-gray-300 text-base sm:text-lg">Delivering fresh and healthy food to your door.</p>
+      </div>
+      <div>
+        <h3 class="text-lg sm:text-xl font-bold mb-2 text-green-400">Support</h3>
+        <p class="text-gray-300 text-base sm:text-lg hover:text-orange-400 transition-colors duration-300 cursor-pointer">Contact Us</p>
+        <p class="text-gray-300 text-base sm:text-lg hover:text-orange-400 transition-colors duration-300 cursor-pointer">FAQs</p>
+      </div>
+      <div>
+        <h3 class="text-lg sm:text-xl font-bold mb-2 text-green-400">Useful Links</h3>
+        <p class="text-gray-300 text-base sm:text-lg hover:text-orange-400 transition-colors duration-300 cursor-pointer">Privacy Policy</p>
+        <p class="text-gray-300 text-base sm:text-lg hover:text-orange-400 transition-colors duration-300 cursor-pointer">Terms of Service</p>
+      </div>
+      <div>
+        <h3 class="text-lg sm:text-xl font-bold mb-2 text-green-400">Get In Touch</h3>
+        <p class="text-gray-300 text-base sm:text-lg flex items-center justify-center sm:justify-start gap-2">
+          <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="7" r="4" stroke-width="2"></circle>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12v1a4 4 0 01-8 0v-1"></path>
+          </svg>
+          support@suribabukodipalao.com
+        </p>
+        <p class="text-gray-300 text-base sm:text-lg flex items-center justify-center sm:justify-start gap-2">
+          <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2v-8a2 2 0 012-2h2"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12v4m0 0l-2-2m2 2l2-2"></path>
+          </svg>
+          123 Food Street, City
+        </p>
+      </div>
+    </div>
+    <div class="mt-8 text-center text-gray-400 text-sm">
+      © 2025 Suribabu kodi palao. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- JavaScript for Mobile Navbar Toggle -->
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    let menuOpen = false;
+
+    const hamburgerSVG = `
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    `;
+    const crossSVG = `
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    `;
+
+    function isMobile() {
+      return window.innerWidth < 768;
+    }
+
+    function setMenuInitialState() {
+      if (isMobile()) {
+        navMenu.style.transition = 'max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s cubic-bezier(0.4,0,0.2,1)';
+        navMenu.style.overflow = 'hidden';
+        navMenu.style.maxHeight = '0';
+        navMenu.style.opacity = '0';
+        navMenu.classList.add('hidden');
+        menuToggle.innerHTML = hamburgerSVG;
+        menuOpen = false;
+        menuToggle.style.display = '';
+      } else {
+        navMenu.style.transition = '';
+        navMenu.style.overflow = '';
+        navMenu.style.maxHeight = '';
+        navMenu.style.opacity = '';
+        navMenu.classList.remove('hidden');
+        navMenu.classList.remove('flex', 'flex-col', 'items-center');
+        menuToggle.style.display = 'none';
+      }
+    }
+
+    setMenuInitialState();
+
+    window.addEventListener('resize', setMenuInitialState);
+
+    menuToggle.addEventListener('click', () => {
+      if (!isMobile()) return;
+      if (!menuOpen) {
+        navMenu.classList.remove('hidden');
+        navMenu.classList.add('flex', 'flex-col', 'items-center');
+        navMenu.style.maxHeight = navMenu.scrollHeight + 'px';
+        navMenu.style.opacity = '1';
+        menuToggle.innerHTML = crossSVG;
+        menuOpen = true;
+      } else {
+        navMenu.style.maxHeight = '0';
+        navMenu.style.opacity = '0';
+        menuToggle.innerHTML = hamburgerSVG;
+        menuOpen = false;
+        setTimeout(() => {
+          if (!menuOpen && isMobile()) {
+            navMenu.classList.add('hidden');
+            navMenu.classList.remove('flex', 'flex-col', 'items-center');
+          }
+        }, 400);
+      }
+    });
+  </script>
+</body>
+</html>
